@@ -1,5 +1,5 @@
-print("Hello")
-print("Hello world by philippe")
-print("Hello world by philippe 2")
-print('test22')
+# import libraries
+import pandas as pd
 
+# import dataset
+df = pd.read_json('contacts.json')
