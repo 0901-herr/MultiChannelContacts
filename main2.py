@@ -45,9 +45,9 @@ def function2(df, col):
             ret_str = ret_str + ", " + str(contacts)
             for i in link:
                 ticket_data[i] = ticket_trace
-                contact_data[i] = contact_data
+                contact_data[i] = contacts
                 row_data[i] = [int(data.loc[i, 'Id']), ret_str]
-                print(row_data[i])
+                # print(row_data[i])
             i = j
             link = [i]
             if int(data.loc[i, 'Id']) not in ticket_trace:
@@ -61,19 +61,24 @@ def function2(df, col):
 
         j += 1
 
-    final = data.merge(empty_data)
-    return final
+    return data.merge(empty_data)
 
 print("one")
-df = function2(df, 'Email')
+function2(df, 'Email')
+
 print("two")
-df = function2(df, 'Phone')
+function2(df, 'Phone')
+
 print("three")
-df = function2(df, 'OrderId')
-df = df.sort_values(["Id"])
-print(df.head())
+function2(df, 'OrderId')
+# df = df.sort_values(["Id"])
+
 row_data.sort()
+# print(row_data)
+# print(row_data[446510])
+# row_data = [[1, "1-34, 5"], [2, "2-77-345, 7"]]
 final = pd.DataFrame(row_data, columns=['ticket_id', 'ticket_trace/contact'])
+print(final.tail())
 final.to_csv('final3.csv')
 
 
