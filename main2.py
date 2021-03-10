@@ -15,15 +15,15 @@ def function2(df, col):
     print("running function")
     data = df.sort_values([col])
     data = data[data[col] != '']
-    empty_data = data[data[col] == '']
     data.reset_index(inplace=True, drop=True)
 
     i = 0
     j = i+1
 
-    link = [i]
-    ticket_trace = ticket_data[i]
-    contacts = contact_data[i]
+    link = [i]  # for data
+    id = int(data.loc[i, 'Id'])
+    ticket_trace = [id] # global row data (id)
+    contacts = int(data.loc[i, 'Contacts'])  # global row data (id)
 
     while j < len(data):
         if data.loc[i, col] == data.loc[j, col]:
@@ -43,25 +43,26 @@ def function2(df, col):
                 else:
                     ret_str += str(i)
             ret_str = ret_str + ", " + str(contacts)
+
             for i in link:
-                ticket_data[i] = ticket_trace
-                contact_data[i] = contacts
-                row_data[i] = [int(data.loc[i, 'Id']), ret_str]
+                id = int(data.loc[i, 'Id'])
+                ticket_data[id] = ticket_trace
+                contact_data[id] = contacts
+                row_data[id] = [int(data.loc[i, 'Id']), ret_str]
                 # print(row_data[i])
+
             i = j
             link = [i]
-            if int(data.loc[i, 'Id']) not in ticket_trace:
-                ticket_trace = ticket_data[i]
-                ticket_trace.append(int(data.loc[i, 'Id']))
+            id = int(data.loc[i, 'Id'])
+            ticket_trace = ticket_data[id]
+            contacts = int(data.loc[i, 'Contacts'])
+
+            if id not in ticket_trace:
+                ticket_trace.append(id)
                 # print(ticket_trace)
-                contacts = contact_data[i] + int(data.loc[i, 'Contacts'])
-            else:
-                ticket_trace = ticket_data[i]
-                contacts = contact_data[i]
+                contacts = contact_data[id] + int(data.loc[i, 'Contacts'])
 
         j += 1
-
-    return data.merge(empty_data)
 
 print("one")
 function2(df, 'Email')
@@ -74,12 +75,18 @@ function2(df, 'OrderId')
 # df = df.sort_values(["Id"])
 
 row_data.sort()
-# print(row_data)
-# print(row_data[446510])
-# row_data = [[1, "1-34, 5"], [2, "2-77-345, 7"]]
-final = pd.DataFrame(row_data, columns=['ticket_id', 'ticket_trace/contact'])
+# s = pd.Series(row_data)
+
+final = pd.DataFrame(row_data[1:], columns=['ticket_id', 'ticket_trace/contact'])
+final['ticket_id'] = pd.to_numeric(final['ticket_id'], downcast='integer')
+
+print(final.head())
 print(final.tail())
+
 final.to_csv('final3.csv')
+
+
+
 
 
 
